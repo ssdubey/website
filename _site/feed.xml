@@ -6,8 +6,8 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 08 Jul 2019 08:00:26 +0530</pubDate>
-    <lastBuildDate>Mon, 08 Jul 2019 08:00:26 +0530</lastBuildDate>
+    <pubDate>Tue, 09 Jul 2019 00:01:42 +0530</pubDate>
+    <lastBuildDate>Tue, 09 Jul 2019 00:01:42 +0530</lastBuildDate>
     <generator>Jekyll v3.1.6</generator>
     
       <item>
@@ -46,11 +46,168 @@ Please feel free to comment and let us know if you want to know further details 
 As mentioned before IPFS uses Bittorent like protocol for distributing data over the network. Typically bittorrent protocol divides the data into small blocks. By default the block size for IPFS is 256KB.
 Our experiment makes the observation separately on data less than block size and more than that. Below are the graphical representation of our findings.&lt;/p&gt;
 
-&lt;size related=&quot;&quot; graphs=&quot;&quot;&gt;
-&lt;img src=&quot;/assets/Sat_Jun_15_16:14:17_2019.png&quot; alt=&quot;sdgsre&quot; /&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/size/TC1to9/BadgerDBPrivate.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot; /&gt;&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/size/TC1to9/BadgerDBPublic.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot; /&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;b&gt;Private Badger DB&lt;/b&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;b&gt;Public Badger DB&lt;/b&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/size/TC1to9/FSPrivate.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot; /&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/size/TC1to9/FSPublic.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;b&gt;Private FS&lt;/b&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;b&gt;Public FS&lt;/b&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/size/TC1to9/LevelDBPrivate.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot; /&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/size/TC1to9/LevelDBPublic.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;b&gt;Private Level DB&lt;/b&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;b&gt;Public Level DB&lt;/b&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;Fig. above shows the average time taken by &lt;code class=&quot;highlighter-rouge&quot;&gt;ipfs add&lt;/code&gt; operation by various datastores in private and public scopes. The vertical line on top of each bar represents the standard deviation from the average.&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
 
-The above graphs show the performance of IPFS when the input size is less than the block size. It can be observed that if there is a large difference between the file size, we can observe some differences in processing time of `ipfs add` command. The “not so significant” difference in time taken for execution of command indicates the presence of an overhead component as part of the command execution. We will talk about this overhead in the later experiments.
-&lt;/size&gt;
+&lt;p&gt;The above graphs show the performance of IPFS when the input size is less than the block size. It can be observed that if there is a large difference between the file size, we can observe some differences in processing time of &lt;code class=&quot;highlighter-rouge&quot;&gt;ipfs add&lt;/code&gt; command. The “not so significant” difference in time taken for execution of command indicates the presence of an overhead component as part of the command execution. We will talk about this overhead in the later experiments.&lt;/p&gt;
+
+&lt;p&gt;It is worth to note that even if some of the graphs, like public and private FS shows relatively more variations in the time duration of the &lt;code class=&quot;highlighter-rouge&quot;&gt;add&lt;/code&gt; operation, the variation is still less than 100ms, which can be attributed to the non-ideal conditions of the experimental setup. The vertical lines showing standard deviation points out the range of variations in extreme cases.&lt;/p&gt;
+
+&lt;p&gt;Overall, we can state that variation in size of data does not play any significant role in overall performance of IPFS.&lt;/p&gt;
+
+&lt;p&gt;Another noticable point is the magnitude of time taken by the datastores for the same size of the file. For both Badger DB and FS, the time taken is around 400 to 500 milliseconds, while the Level DB does the same within 40 to 50 milliseconds.&lt;/p&gt;
+
+&lt;p&gt;One interesting quetion would be, if there is any difference in public and private datastores while adding the data. &lt;b&gt;DO IT&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;Our next benchmark test over the size parameter is to check if the multiple &lt;code class=&quot;highlighter-rouge&quot;&gt;add&lt;/code&gt; operations over the same data is optimized or not. 
+In simple words, &lt;code class=&quot;highlighter-rouge&quot;&gt;ipfs add&lt;/code&gt; command does two things internally.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;It takes the data and calculates its hash&lt;/li&gt;
+  &lt;li&gt;Adds the hash into its keystore (&lt;strong&gt;check the terminology&lt;/strong&gt;) and points it to the corresponding data. 
+Calculating hash would not be optional but if the hash turns out to be same as any existing key, IPFS can avoid the second step.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Below are the graphs from our second set of experiment. These are only a few graphs from our experiment. The whole set of output can be found on the github repo (&lt;b&gt;Refer it&lt;/b&gt;)&lt;/p&gt;
+
+&lt;!---  Removing individual graphs of 11(a) because I think graphs of 11(b) are sufficient to deduce the conclusions of both observations. Graphs of 11(a) are still in the assets folder.
+:-------------------------:|:-------------------------:
+&lt;img src=&quot;/assets/size/TC11(a)/PrivateBadger16B.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot;/&gt;  |  &lt;img src=&quot;/assets/size/TC11(a)/PrivateBadger512KB.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot;/&gt; 
+:-------------------------:|:-------------------------:
+&lt;img src=&quot;/assets/size/TC11(a)/PrivateFS16B.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot;/&gt;  |  &lt;img src=&quot;/assets/size/TC11(a)/PrivateFS512KB.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot;/&gt; 
+:-------------------------:|:-------------------------:
+&lt;img src=&quot;/assets/size/TC11(a)/PrivateLevel16B.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot;/&gt;  |  &lt;img src=&quot;/assets/size/TC11(a)/PrivateLevel512KB.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot;/&gt; 
+:-------------------------:|:-------------------------:
+
+(**Scale down the level DB graph**)
+--&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;img src=&quot;/assets/size/TC11(b)/batch_16B.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot; /&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;img src=&quot;/assets/size/TC11(b)/batch_512KB.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;The graphs presented above are representing the smallest and largest dataset we have worked on. Other samples of the graph which are not shown here also follow the similar pattern and can be verified at (&lt;strong&gt;github repo address&lt;/strong&gt;)&lt;/p&gt;
+
+&lt;p&gt;Experiment no. in the graph refers to the number of times same data is pushed to the IPFS one after another. In badger DB and FS, a clear drop in the operation time can be observed from first attempt to second attempt and further. It indicates that the first attempt does more processing which is saved if the data is repeated again, clearly following our hypothesis mentioned above.&lt;/p&gt;
+
+&lt;p&gt;We have observed that the second step of adding the hash into the keystore (&lt;strong&gt;check the terminology&lt;/strong&gt;) takes approximately 70% of time in Badger DB in private scope and 85% in public scope. (&lt;strong&gt;remove this if operation is same in private and public&lt;/strong&gt;) 
+Similarly the time taken in second step is around 90% and 87% in private and public scopes respectively for FS datastore.&lt;/p&gt;
+
+&lt;p&gt;Leveldb, however, does not follow the suit of other datastores and addition time for it is mearly 5% to 8% of total time. The overall performance is almost 10 times faster than others.&lt;/p&gt;
+
+&lt;p&gt;With the above graph we can also compare the relative performance of each datastores. For the first run FS and Badger are comparable, but FS is relatively costlier. Subsequently, Badger is found to be relatively costlier than FS for repeated data. We cannot rule out the non-ideal conditions of computing environment for slight variations.&lt;/p&gt;
+
+&lt;p&gt;(&lt;strong&gt;mention somewhere that computing environment is containers&lt;/strong&gt;)&lt;/p&gt;
+
+&lt;p&gt;Level DB outruns both Badger and FS for the first run, but is almost comparable to FS for subsequent runs.&lt;/p&gt;
+
+&lt;p&gt;We can also observe from the above graphs showing a difference of size as big as 500KB or two IPFS blocks, that the effect of size on operation is almost negligible throughout the datastores.&lt;/p&gt;
+
+&lt;p&gt;Until now we saw that if the same data is added repeatedly to the IPFS, it is optimised and there is significant improvement in the performance. From the theory we also understood that like bittorrent, IPFS also divides the data into blocks. Our next experiment was to check if the optimization we observed above was also extended upto block level, and we were not disappointed.&lt;/p&gt;
+
+&lt;p&gt;Below is the graph drawn for average time taken by each datastore to add some data. The dataset contains files of 400KB each (&lt;strong&gt;change in graph&lt;/strong&gt;), in which one block or 256KB of data is same in each file and rest 144KB is&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;different for one set of experiment, and&lt;/li&gt;
+  &lt;li&gt;same for another set of experiment.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;(&lt;strong&gt;perform experiment with 400KB of all different data and edit the graph&lt;/strong&gt;)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/size/TC12/graph.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;(&lt;strong&gt;write the observation after modifying the graph as above&lt;/strong&gt;)&lt;/p&gt;
+
+&lt;p&gt;The next experiment is the extension of previous one in which we test how the diversity of blocks in a single data file affects the performance of IPFS over different datastores. The dataset contains 8 files of a kind, each containing data equivalent to one block size to 8 block sizes.  The files are of three kinds:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Each block contains the same data. The data is also same in each file. It is represented in the graph as: A, AA, AAA …&lt;/li&gt;
+  &lt;li&gt;Each block contains the same data, but it is different in each file. It is represented in the graphs as: A, BB, CCC …&lt;/li&gt;
+  &lt;li&gt;Each block contains different data. It is represented in the graph as: A, BC, DEF …&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The correspoding graph is shown below:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/size/TC14to16/private_badger.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot; /&gt;&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/size/TC14to16/public_badger.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot; /&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;b&gt;Private Badger DB&lt;/b&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;b&gt;Public Badger DB&lt;/b&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/size/TC14to16/private_fs.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot; /&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/size/TC14to16/public_fs.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;b&gt;Private FS&lt;/b&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;b&gt;Public FS&lt;/b&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/size/TC14to16/private_level.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot; /&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/assets/size/TC14to16/public_level.png&quot; alt=&quot;drawing&quot; width=&quot;800&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;b&gt;Private Level DB&lt;/b&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;b&gt;Public Level DB&lt;/b&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;We can see the similar pattern in each of the datastores with varying magnitude which could again be attributed to the non-ideal experimental environment. The observation is inline with the previous experiment that, IPFS efficiently utilizes the data block which is already present with it. It greatly affects the efficiency and performance in case the datastore takes significant time searching, if the key is already present. Relatively fast datastores such as Level DB in this case, shows consistent behaviour for any level of diversity in the dataset.&lt;/p&gt;
 </description>
         <pubDate>Sun, 07 Jul 2019 00:00:00 +0530</pubDate>
         <link>http://yourdomain.com/2019/07/07/pg1.html</link>

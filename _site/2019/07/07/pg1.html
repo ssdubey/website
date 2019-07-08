@@ -32,8 +32,165 @@ Please feel free to comment and let us know if you want to know further details 
 As mentioned before IPFS uses Bittorent like protocol for distributing data over the network. Typically bittorrent protocol divides the data into small blocks. By default the block size for IPFS is 256KB.
 Our experiment makes the observation separately on data less than block size and more than that. Below are the graphical representation of our findings.</p>
 
-<size related="" graphs="">
-<img src="/assets/Sat_Jun_15_16:14:17_2019.png" alt="sdgsre" />
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="/assets/size/TC1to9/BadgerDBPrivate.png" alt="drawing" width="800" /></th>
+      <th style="text-align: center"><img src="/assets/size/TC1to9/BadgerDBPublic.png" alt="drawing" width="800" /></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><b>Private Badger DB</b></td>
+      <td style="text-align: center"><b>Public Badger DB</b></td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="/assets/size/TC1to9/FSPrivate.png" alt="drawing" width="800" /></td>
+      <td style="text-align: center"><img src="/assets/size/TC1to9/FSPublic.png" alt="drawing" width="800" /></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><b>Private FS</b></td>
+      <td style="text-align: center"><b>Public FS</b></td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="/assets/size/TC1to9/LevelDBPrivate.png" alt="drawing" width="800" /></td>
+      <td style="text-align: center"><img src="/assets/size/TC1to9/LevelDBPublic.png" alt="drawing" width="800" /></td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><b>Private Level DB</b></td>
+      <td style="text-align: center"><b>Public Level DB</b></td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: center">Fig. above shows the average time taken by <code class="highlighter-rouge">ipfs add</code> operation by various datastores in private and public scopes. The vertical line on top of each bar represents the standard deviation from the average.</td>
+      <td style="text-align: center"> </td>
+    </tr>
+  </tbody>
+</table>
 
-The above graphs show the performance of IPFS when the input size is less than the block size. It can be observed that if there is a large difference between the file size, we can observe some differences in processing time of `ipfs add` command. The “not so significant” difference in time taken for execution of command indicates the presence of an overhead component as part of the command execution. We will talk about this overhead in the later experiments.
-</size>
+<p>The above graphs show the performance of IPFS when the input size is less than the block size. It can be observed that if there is a large difference between the file size, we can observe some differences in processing time of <code class="highlighter-rouge">ipfs add</code> command. The “not so significant” difference in time taken for execution of command indicates the presence of an overhead component as part of the command execution. We will talk about this overhead in the later experiments.</p>
+
+<p>It is worth to note that even if some of the graphs, like public and private FS shows relatively more variations in the time duration of the <code class="highlighter-rouge">add</code> operation, the variation is still less than 100ms, which can be attributed to the non-ideal conditions of the experimental setup. The vertical lines showing standard deviation points out the range of variations in extreme cases.</p>
+
+<p>Overall, we can state that variation in size of data does not play any significant role in overall performance of IPFS.</p>
+
+<p>Another noticable point is the magnitude of time taken by the datastores for the same size of the file. For both Badger DB and FS, the time taken is around 400 to 500 milliseconds, while the Level DB does the same within 40 to 50 milliseconds.</p>
+
+<p>One interesting quetion would be, if there is any difference in public and private datastores while adding the data. <b>DO IT</b></p>
+
+<p>Our next benchmark test over the size parameter is to check if the multiple <code class="highlighter-rouge">add</code> operations over the same data is optimized or not. 
+In simple words, <code class="highlighter-rouge">ipfs add</code> command does two things internally.</p>
+<ul>
+  <li>It takes the data and calculates its hash</li>
+  <li>Adds the hash into its keystore (<strong>check the terminology</strong>) and points it to the corresponding data. 
+Calculating hash would not be optional but if the hash turns out to be same as any existing key, IPFS can avoid the second step.</li>
+</ul>
+
+<p>Below are the graphs from our second set of experiment. These are only a few graphs from our experiment. The whole set of output can be found on the github repo (<b>Refer it</b>)</p>
+
+<!---  Removing individual graphs of 11(a) because I think graphs of 11(b) are sufficient to deduce the conclusions of both observations. Graphs of 11(a) are still in the assets folder.
+:-------------------------:|:-------------------------:
+<img src="/assets/size/TC11(a)/PrivateBadger16B.png" alt="drawing" width="800"/>  |  <img src="/assets/size/TC11(a)/PrivateBadger512KB.png" alt="drawing" width="800"/> 
+:-------------------------:|:-------------------------:
+<img src="/assets/size/TC11(a)/PrivateFS16B.png" alt="drawing" width="800"/>  |  <img src="/assets/size/TC11(a)/PrivateFS512KB.png" alt="drawing" width="800"/> 
+:-------------------------:|:-------------------------:
+<img src="/assets/size/TC11(a)/PrivateLevel16B.png" alt="drawing" width="800"/>  |  <img src="/assets/size/TC11(a)/PrivateLevel512KB.png" alt="drawing" width="800"/> 
+:-------------------------:|:-------------------------:
+
+(**Scale down the level DB graph**)
+-->
+
+<table>
+  <tbody>
+    <tr>
+      <td><img src="/assets/size/TC11(b)/batch_16B.png" alt="drawing" width="800" /></td>
+      <td><img src="/assets/size/TC11(b)/batch_512KB.png" alt="drawing" width="800" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The graphs presented above are representing the smallest and largest dataset we have worked on. Other samples of the graph which are not shown here also follow the similar pattern and can be verified at (<strong>github repo address</strong>)</p>
+
+<p>Experiment no. in the graph refers to the number of times same data is pushed to the IPFS one after another. In badger DB and FS, a clear drop in the operation time can be observed from first attempt to second attempt and further. It indicates that the first attempt does more processing which is saved if the data is repeated again, clearly following our hypothesis mentioned above.</p>
+
+<p>We have observed that the second step of adding the hash into the keystore (<strong>check the terminology</strong>) takes approximately 70% of time in Badger DB in private scope and 85% in public scope. (<strong>remove this if operation is same in private and public</strong>) 
+Similarly the time taken in second step is around 90% and 87% in private and public scopes respectively for FS datastore.</p>
+
+<p>Leveldb, however, does not follow the suit of other datastores and addition time for it is mearly 5% to 8% of total time. The overall performance is almost 10 times faster than others.</p>
+
+<p>With the above graph we can also compare the relative performance of each datastores. For the first run FS and Badger are comparable, but FS is relatively costlier. Subsequently, Badger is found to be relatively costlier than FS for repeated data. We cannot rule out the non-ideal conditions of computing environment for slight variations.</p>
+
+<p>(<strong>mention somewhere that computing environment is containers</strong>)</p>
+
+<p>Level DB outruns both Badger and FS for the first run, but is almost comparable to FS for subsequent runs.</p>
+
+<p>We can also observe from the above graphs showing a difference of size as big as 500KB or two IPFS blocks, that the effect of size on operation is almost negligible throughout the datastores.</p>
+
+<p>Until now we saw that if the same data is added repeatedly to the IPFS, it is optimised and there is significant improvement in the performance. From the theory we also understood that like bittorrent, IPFS also divides the data into blocks. Our next experiment was to check if the optimization we observed above was also extended upto block level, and we were not disappointed.</p>
+
+<p>Below is the graph drawn for average time taken by each datastore to add some data. The dataset contains files of 400KB each (<strong>change in graph</strong>), in which one block or 256KB of data is same in each file and rest 144KB is</p>
+<ul>
+  <li>different for one set of experiment, and</li>
+  <li>same for another set of experiment.</li>
+</ul>
+
+<p>(<strong>perform experiment with 400KB of all different data and edit the graph</strong>)</p>
+
+<p><img src="/assets/size/TC12/graph.png" alt="drawing" width="800" /></p>
+
+<p>(<strong>write the observation after modifying the graph as above</strong>)</p>
+
+<p>The next experiment is the extension of previous one in which we test how the diversity of blocks in a single data file affects the performance of IPFS over different datastores. The dataset contains 8 files of a kind, each containing data equivalent to one block size to 8 block sizes.  The files are of three kinds:</p>
+<ul>
+  <li>Each block contains the same data. The data is also same in each file. It is represented in the graph as: A, AA, AAA …</li>
+  <li>Each block contains the same data, but it is different in each file. It is represented in the graphs as: A, BB, CCC …</li>
+  <li>Each block contains different data. It is represented in the graph as: A, BC, DEF …</li>
+</ul>
+
+<p>The correspoding graph is shown below:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><img src="/assets/size/TC14to16/private_badger.png" alt="drawing" width="800" /></th>
+      <th style="text-align: center"><img src="/assets/size/TC14to16/public_badger.png" alt="drawing" width="800" /></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><b>Private Badger DB</b></td>
+      <td style="text-align: center"><b>Public Badger DB</b></td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="/assets/size/TC14to16/private_fs.png" alt="drawing" width="800" /></td>
+      <td style="text-align: center"><img src="/assets/size/TC14to16/public_fs.png" alt="drawing" width="800" /></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><b>Private FS</b></td>
+      <td style="text-align: center"><b>Public FS</b></td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="/assets/size/TC14to16/private_level.png" alt="drawing" width="800" /></td>
+      <td style="text-align: center"><img src="/assets/size/TC14to16/public_level.png" alt="drawing" width="800" /></td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><b>Private Level DB</b></td>
+      <td style="text-align: center"><b>Public Level DB</b></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We can see the similar pattern in each of the datastores with varying magnitude which could again be attributed to the non-ideal experimental environment. The observation is inline with the previous experiment that, IPFS efficiently utilizes the data block which is already present with it. It greatly affects the efficiency and performance in case the datastore takes significant time searching, if the key is already present. Relatively fast datastores such as Level DB in this case, shows consistent behaviour for any level of diversity in the dataset.</p>

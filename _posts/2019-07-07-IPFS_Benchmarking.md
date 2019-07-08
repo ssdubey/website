@@ -32,25 +32,12 @@ First parameter on our benchmark list is Size.
 As mentioned before IPFS uses Bittorent like protocol for distributing data over the network. Typically bittorrent protocol divides the data into small blocks. By default the block size for IPFS is 256KB.
 Our experiment makes the observation separately on data less than block size and more than that. Below are the graphical representation of our findings. 
 
-<!---   
-<img src="/assets/size/TC14to16/private_badger.png" alt="drawing" width="800"/>  |  <img src="/assets/size/TC14to16/public_badger.png" alt="drawing" width="800"/> 
-:-------------------------:|:-------------------------:
-<B>Private Badger DB</B>   |  <B>Public Badger DB</B>        
-:-------------------------:|:-------------------------:
-<img src="/assets/size/TC14to16/private_fs.png" alt="drawing" width="800"/>  |  <img src="/assets/size/TC14to16/public_fs.png" alt="drawing" width="800"/> 
-<B>Private FS</B> 		   |		<B>Public FS</B> 		   
-:-------------------------:|:-------------------------:
-<img src="/assets/size/TC14to16/private_level.png" alt="drawing" width="800"/>  |  <img src="/assets/size/TC14to16/public_level.png" alt="drawing" width="800"/> 
-:-------------------------:|:-------------------------:
-<B>Private Level DB</B>    |  <B>Public Level DB</B>     
-:-------------------------:|:-------------------------:
--->
 <img src="/assets/size/TC1to9/BadgerDBPrivate.png" alt="drawing" width="800"/>  |  <img src="/assets/size/TC1to9/BadgerDBPublic.png" alt="drawing" width="800"/> 
 :-------------------------:|:-------------------------:
 <B>Private Badger DB</B>   |  <B>Public Badger DB</B>        
 :-------------------------:|:-------------------------:
 <img src="/assets/size/TC1to9/FSPrivate.png" alt="drawing" width="800"/>  |  <img src="/assets/size/TC1to9/FSPublic.png" alt="drawing" width="800"/> 
-<B>Private FS</B> 		   |		<B>Public FS</B> 		   
+<B>Private FS</B> 		     |		<B>Public FS</B> 		   
 :-------------------------:|:-------------------------:
 <img src="/assets/size/TC1to9/LevelDBPrivate.png" alt="drawing" width="800"/>  |  <img src="/assets/size/TC1to9/LevelDBPublic.png" alt="drawing" width="800"/> 
 :-------------------------:|:-------------------------:
@@ -58,6 +45,7 @@ Our experiment makes the observation separately on data less than block size and
 :-------------------------:|:-------------------------:      
 
 Fig. above shows the average time taken by `ipfs add` operation by various datastores in private and public scopes. The vertical line on top of each bar represents the standard deviation from the average.|
+
 
 The above graphs show the performance of IPFS when the input size is less than the block size. It can be observed that if there is a large difference between the file size, we can observe some differences in processing time of `ipfs add` command. The “not so significant” difference in time taken for execution of command indicates the presence of an overhead component as part of the command execution. We will talk about this overhead in the later experiments.
 
